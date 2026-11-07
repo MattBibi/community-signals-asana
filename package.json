@@ -5,7 +5,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "setup": "tsx scripts/setup-asana.ts",
     "try:task": "tsx scripts/create-test-task.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "try:triage": "tsx scripts/try-triage.ts"
   },
   "keywords": [],
   "author": "",
@@ -14,6 +15,7 @@
   "type": "module",
   "private": "true",
   "dependencies": {
+    "@anthropic-ai/sdk": "^1.6.0",
     "asana": "^3.4.0",
     "zod": "^4.6.7"
   },
