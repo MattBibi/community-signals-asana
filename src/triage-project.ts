@@ -3,7 +3,14 @@
 // to re-run. The app itself calls it with create: false and fails loudly.
 import { asana, type CustomField } from "./asana.js";
 import { config } from "./config.js";
-import { FIELDS, NEEDS_REVIEW_SECTION, SIGNAL_TYPES, type FieldKey, type SignalType } from "./taxonomy.js";
+import {
+  FIELDS,
+  NEEDS_REVIEW_SECTION,
+  SIGNAL_TYPES,
+  SOURCE_URL_FIELD,
+  type FieldKey,
+  type SignalType,
+} from "./taxonomy.js";
 
 export interface TriageProject {
   workspace: string;
@@ -11,6 +18,8 @@ export interface TriageProject {
   sections: Record<SignalType, string> & { needsReview: string };
   /** field key → { gid, options: label → enum option gid } */
   fields: Record<FieldKey, { gid: string; options: Record<string, string> }>;
+  /** gid of the "Source URL" text field */
+  sourceUrlField: string;
 }
 
 type Log = (msg: string) => void;
@@ -92,6 +101,19 @@ export async function resolveTriageProject(
     fields[key] = { gid: field.gid, options };
   }
 
+  // Source URL: a plain text field
+  let urlField = onProject.find((f) => f.name === SOURCE_URL_FIELD);
+  if (urlField && urlField.resource_subtype !== "text") {
+    throw new Error(`The project's "${SOURCE_URL_FIELD}" field must be a text field.`);
+  }
+  if (!urlField && create) {
+    urlField = inWorkspace.find((f) => f.name === SOURCE_URL_FIELD && f.resource_subtype === "text");
+    urlField ??= await asana.createTextField(workspace, SOURCE_URL_FIELD);
+    await asana.addFieldToProject(project.gid, urlField.gid);
+    log(`  + field ${SOURCE_URL_FIELD}`);
+  }
+  if (!urlField) throw missing(`Custom field "${SOURCE_URL_FIELD}"`);
+
   const bySignal = Object.fromEntries(
     (Object.keys(SIGNAL_TYPES) as SignalType[]).map((k) => [k, sectionGid[SIGNAL_TYPES[k]]!]),
   ) as Record<SignalType, string>;
@@ -101,5 +123,6 @@ export async function resolveTriageProject(
     project: project.gid,
     sections: { ...bySignal, needsReview: sectionGid[NEEDS_REVIEW_SECTION]! },
     fields,
+    sourceUrlField: urlField.gid,
   };
 }

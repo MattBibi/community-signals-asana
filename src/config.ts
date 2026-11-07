@@ -8,6 +8,11 @@ const Env = z.object({
   ASANA_PAT: z.string().min(1, "Set ASANA_PAT in .env (see .env.example)"),
   ASANA_WORKSPACE_GID: z.string().optional(),
   ASANA_PROJECT_NAME: z.string().default("Community Triage"),
+  GITHUB_TOKEN: z.string().optional(),
+  GITHUB_REPO: z
+    .string()
+    .regex(/^[\w.-]+\/[\w.-]+$/, "GITHUB_REPO must look like owner/name")
+    .optional(),
 });
 
 const parsed = Env.safeParse(process.env);

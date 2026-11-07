@@ -6,7 +6,8 @@
     "setup": "tsx scripts/setup-asana.ts",
     "try:task": "tsx scripts/create-test-task.ts",
     "typecheck": "tsc --noEmit",
-    "try:triage": "tsx scripts/try-triage.ts"
+    "try:triage": "tsx scripts/try-triage.ts",
+    "poll": "tsx scripts/poll-github.ts"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +17,7 @@
   "private": "true",
   "dependencies": {
     "@anthropic-ai/sdk": "^1.6.0",
+    "@octokit/rest": "^22.0.1",
     "asana": "^3.4.0",
     "zod": "^4.6.7"
   },

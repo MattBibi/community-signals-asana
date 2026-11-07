@@ -27,6 +27,26 @@ export interface CustomField extends Named {
 export interface Task extends Named {
   permalink_url: string;
 }
+export interface TaskWithFields extends Named {
+  completed: boolean;
+  custom_fields: { gid: string; text_value?: string | null }[];
+}
+
+/** Follow Asana's pagination until every page is read. */
+async function listAll<T>(label: string, first: () => Promise<any>): Promise<T[]> {
+  const items: T[] = [];
+  try {
+    let page = await first();
+    while (page?.data) {
+      items.push(...page.data);
+      page = typeof page.nextPage === "function" ? await page.nextPage() : null;
+    }
+  } catch (err: any) {
+    const detail = err?.response?.body?.errors?.map((e: any) => e.message).join("; ");
+    throw new Error(`Asana ${label} failed: ${detail ?? err?.message ?? err}`);
+  }
+  return items;
+}
 
 /** Turn SDK errors into readable messages with Asana's own error text. */
 async function call<T>(label: string, fn: () => Promise<{ data: unknown }>): Promise<T> {
@@ -84,6 +104,23 @@ export const asana = {
       ),
     ),
 
+  createTextField: (workspace: string, name: string) =>
+    call<CustomField>("create custom field", () =>
+      customFields.createCustomField(
+        { data: { workspace, name, resource_subtype: "text" } },
+        { opt_fields: "name,resource_subtype" },
+      ),
+    ),
+
+  /** Every task in the project, completed or not, with custom field values. */
+  allTasks: (project: string) =>
+    listAll<TaskWithFields>("list tasks", () =>
+      tasks.getTasksForProject(project, {
+        limit: 100,
+        opt_fields: "name,completed,custom_fields.gid,custom_fields.text_value",
+      }),
+    ),
+
   addEnumOption: (field: string, name: string, color: string) =>
     call<EnumOption>("add enum option", () =>
       customFields.createEnumOptionForCustomField(field, { body: { data: { name, color } } }),
@@ -109,6 +146,7 @@ export const asana = {
     notes: string;
     project: string;
     section: string;
+    /** field gid → enum option gid, or text for text fields */
     customFields: Record<string, string>;
   }) =>
     call<Task>("create task", () =>

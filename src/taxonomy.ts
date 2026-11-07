@@ -54,3 +54,8 @@ export const FIELDS = {
 } as const;
 
 export type FieldKey = keyof typeof FIELDS;
+
+/** Text field holding the link back to the original issue or thread. It
+ * stops the same signal becoming two tasks, and tells the reply step where
+ * to answer. */
+export const SOURCE_URL_FIELD = "Source URL";

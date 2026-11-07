@@ -4,5 +4,5 @@ import { resolveTriageProject } from "../src/triage-project.js";
 
 const result = await resolveTriageProject({ create: true, log: console.log });
 console.log(
-  `\nReady: ${Object.keys(result.sections).length} sections, ${Object.keys(result.fields).length} custom fields.`,
+  `\nReady: ${Object.keys(result.sections).length} sections, ${Object.keys(result.fields).length + 1} custom fields.`,
 );
