@@ -7,7 +7,7 @@ import { resolveTriageProject } from "../src/triage-project.js";
 
 const base = process.argv[2]?.replace(/\/$/, "");
 if (!base?.startsWith("https://")) {
-  console.error("Usage: npm run webhook:register -- https://<public url of npm run serve>");
+  console.error("Usage: npm run webhook:register -- https://<public url of npm start>");
   process.exit(1);
 }
 const target = `${base}/webhooks/asana`;

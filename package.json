@@ -2,15 +2,14 @@
   "name": "community-signals-asana",
   "version": "1.0.0",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "setup": "tsx scripts/setup-asana.ts",
     "try:task": "tsx scripts/create-test-task.ts",
     "typecheck": "tsc --noEmit",
     "try:triage": "tsx scripts/try-triage.ts",
     "poll": "tsx scripts/poll-github.ts",
-    "serve": "tsx src/server.ts",
     "webhook:register": "tsx scripts/register-webhook.ts",
-    "digest": "bash scripts/digest.sh"
+    "digest": "bash scripts/digest.sh",
+    "start": "tsx src/main.ts"
   },
   "keywords": [],
   "author": "",
