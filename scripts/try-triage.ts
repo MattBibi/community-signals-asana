@@ -19,6 +19,7 @@ const started = Date.now();
 const results = await Promise.allSettled(SAMPLES.map((s) => triage(s.signal)));
 
 let passed = 0;
+let cost = 0;
 results.forEach((res, i) => {
   const sample = SAMPLES[i]!;
   const label = sample.signal.title ?? sample.signal.body.slice(0, 60);
@@ -27,7 +28,8 @@ results.forEach((res, i) => {
     console.log(`  ✗ error: ${res.reason instanceof Error ? res.reason.message : res.reason}`);
     return;
   }
-  const r = res.value;
+  const r = res.value.result;
+  cost += res.value.usage.costUsd;
   const misses = check(sample.expect, r);
   if (misses.length === 0) passed++;
   console.log(
@@ -37,4 +39,7 @@ results.forEach((res, i) => {
   for (const m of misses) console.log(`  ! ${m}`);
 });
 
-console.log(`\n${passed}/${SAMPLES.length} matched expectations in ${((Date.now() - started) / 1000).toFixed(1)}s`);
+console.log(
+  `\n${passed}/${SAMPLES.length} matched expectations in ${((Date.now() - started) / 1000).toFixed(1)}s, ` +
+    `about $${cost.toFixed(4)} ($${(cost / SAMPLES.length).toFixed(4)} per signal)`,
+);

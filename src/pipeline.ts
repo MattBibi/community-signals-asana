@@ -2,7 +2,7 @@
 // Slack later), so each input only has to produce a Signal.
 import { asana, type Task } from "./asana.js";
 import { PRIORITIES, SIGNAL_TYPES, SOURCES } from "./taxonomy.js";
-import { triage, type Signal, type TriageResult } from "./triage.js";
+import { triage, type Signal, type TriageResult, type TriageUsage } from "./triage.js";
 import type { TriageProject } from "./triage-project.js";
 
 /** What's already in Asana: used to skip signals we've handled and to let
@@ -22,15 +22,18 @@ export async function loadExisting(tp: TriageProject): Promise<Existing> {
   return { urls, openTitles: tasks.filter((t) => !t.completed).map((t) => t.name) };
 }
 
-export type Outcome =
+export type Outcome = { usage: TriageUsage } & (
   | { kind: "created"; task: Task; result: TriageResult; needsReview: boolean }
-  | { kind: "skipped"; reason: string };
+  | { kind: "skipped"; reason: string }
+);
 
 export async function processSignal(signal: Signal, tp: TriageProject, existing: Existing): Promise<Outcome> {
-  const result = await triage(signal, existing.openTitles);
+  const { result, usage } = await triage(signal, existing.openTitles);
 
-  if (result.skip) return { kind: "skipped", reason: result.skip_reason ?? "skipped by triage" };
-  if (result.duplicate_of) return { kind: "skipped", reason: `duplicate of "${result.duplicate_of}"` };
+  if (result.skip) return { kind: "skipped", reason: result.skip_reason ?? "skipped by triage", usage };
+  if (result.duplicate_of) {
+    return { kind: "skipped", reason: `duplicate of "${result.duplicate_of}"`, usage };
+  }
 
   const needsReview = !result.confident;
   const f = tp.fields;
@@ -56,5 +59,5 @@ export async function processSignal(signal: Signal, tp: TriageProject, existing:
 
   existing.urls.add(signal.url);
   existing.openTitles.push(task.name);
-  return { kind: "created", task, result, needsReview };
+  return { kind: "created", task, result, needsReview, usage };
 }

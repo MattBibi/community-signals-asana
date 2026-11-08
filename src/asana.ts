@@ -12,6 +12,7 @@ const sections = new Asana.SectionsApi();
 const customFields = new Asana.CustomFieldsApi();
 const fieldSettings = new Asana.CustomFieldSettingsApi();
 const tasks = new Asana.TasksApi();
+const webhooks = new Asana.WebhooksApi();
 
 export interface Named {
   gid: string;
@@ -120,6 +121,37 @@ export const asana = {
         opt_fields: "name,completed,custom_fields.gid,custom_fields.text_value",
       }),
     ),
+
+  task: (gid: string) =>
+    call<TaskWithFields & { permalink_url: string }>("get task", () =>
+      tasks.getTask(gid, {
+        opt_fields: "name,completed,permalink_url,custom_fields.gid,custom_fields.text_value",
+      }),
+    ),
+
+  webhooks: (workspace: string, resource: string) =>
+    listAll<{ gid: string; target: string; active: boolean }>("list webhooks", () =>
+      webhooks.getWebhooks(workspace, { resource, limit: 100, opt_fields: "target,active" }),
+    ),
+
+  /** Asana calls `target` with an X-Hook-Secret handshake before this returns,
+   * so the server must already be reachable at that URL. */
+  createWebhook: (resource: string, target: string) =>
+    call<{ gid: string; target: string; active: boolean }>("create webhook", () =>
+      webhooks.createWebhook(
+        {
+          data: {
+            resource,
+            target,
+            // Only task completion changes; everything else is noise for us.
+            filters: [{ resource_type: "task", action: "changed", fields: ["completed"] }],
+          },
+        },
+        { opt_fields: "target,active" },
+      ),
+    ),
+
+  deleteWebhook: (gid: string) => call<unknown>("delete webhook", () => webhooks.deleteWebhook(gid)),
 
   addEnumOption: (field: string, name: string, color: string) =>
     call<EnumOption>("add enum option", () =>

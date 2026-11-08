@@ -47,6 +47,25 @@ export async function openIssues(): Promise<GitHubIssueSignal[]> {
     }));
 }
 
+/** Issue number for a URL on *our* repo, or null. The Source URL field can be
+ * edited by anyone in Asana, so never comment on a repo we weren't set up for. */
+export function issueNumberFromUrl(url: string): number | null {
+  const m = url.match(/^https:\/\/github\.com\/([\w.-]+)\/([\w.-]+)\/issues\/(\d+)\/?$/);
+  if (!m || `${m[1]}/${m[2]}`.toLowerCase() !== config.GITHUB_REPO?.toLowerCase()) return null;
+  return Number(m[3]);
+}
+
+export async function issueCommentBodies(number: number): Promise<string[]> {
+  const { octokit, owner, repo } = github();
+  const comments = await octokit.paginate(octokit.rest.issues.listComments, {
+    owner,
+    repo,
+    issue_number: number,
+    per_page: 100,
+  });
+  return comments.map((c) => c.body ?? "");
+}
+
 export async function commentOnIssue(number: number, body: string): Promise<string> {
   const { octokit, owner, repo } = github();
   const { data } = await octokit.rest.issues.createComment({ owner, repo, issue_number: number, body });
