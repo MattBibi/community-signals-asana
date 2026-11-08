@@ -13,6 +13,9 @@ const Env = z.object({
     .string()
     .regex(/^[\w.-]+\/[\w.-]+$/, "GITHUB_REPO must look like owner/name")
     .optional(),
+  SLACK_BOT_TOKEN: z.string().startsWith("xoxb-", "SLACK_BOT_TOKEN starts with xoxb-").optional().or(z.literal("")),
+  SLACK_APP_TOKEN: z.string().startsWith("xapp-", "SLACK_APP_TOKEN starts with xapp-").optional().or(z.literal("")),
+  SLACK_CHANNEL: z.string().default("questions").transform((s) => s.replace(/^#/, "")),
 });
 
 const parsed = Env.safeParse(process.env);

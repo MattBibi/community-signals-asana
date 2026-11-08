@@ -3,6 +3,7 @@
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import { replyIfCompleted } from "./close-the-loop.js";
+import { slackConfigured, startSlackListener } from "./slack.js";
 import { resolveTriageProject } from "./triage-project.js";
 import { isValidSignature, loadSecret, saveSecret } from "./webhook-secret.js";
 
@@ -49,7 +50,7 @@ app.post("/webhooks/asana", async (c) => {
   for (const gid of taskGids) {
     replyIfCompleted(gid, tp)
       .then((out) =>
-        console.log(out.kind === "replied" ? `Task ${gid}: replied ${out.commentUrl}` : `Task ${gid}: ${out.reason}`),
+        console.log(out.kind === "replied" ? `Task ${gid}: replied ${out.replyUrl}` : `Task ${gid}: ${out.reason}`),
       )
       .catch((err) => console.error(`Task ${gid} failed: ${err instanceof Error ? err.message : err}`));
   }
@@ -58,3 +59,10 @@ app.post("/webhooks/asana", async (c) => {
 
 const port = Number(process.env.PORT ?? 3000);
 serve({ fetch: app.fetch, port }, () => console.log(`Listening on http://localhost:${port}`));
+
+// Slack is optional: start it only when its tokens are set.
+if (slackConfigured()) {
+  startSlackListener(tp).catch((err) => console.error(`Slack failed to start: ${err instanceof Error ? err.message : err}`));
+} else {
+  console.log("Slack not configured (SLACK_BOT_TOKEN / SLACK_APP_TOKEN), skipping");
+}

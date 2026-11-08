@@ -1,0 +1,25 @@
+# Paste this at https://api.slack.com/apps → Create New App → From a manifest.
+# Socket Mode means the app connects out to Slack: no public URL needed.
+display_information:
+  name: Community Signals
+  description: Turns developer questions into triaged Asana tasks and replies when they're done.
+  background_color: "#2c2d30"
+features:
+  bot_user:
+    display_name: Community Signals
+    always_online: true
+oauth_config:
+  scopes:
+    bot:
+      - channels:history # read messages in public channels the bot is in
+      - channels:read # look up the channel name
+      - chat:write # reply in the thread when a task is done
+      - reactions:write # add 👀 when a message becomes a task
+      - users:read # show the author's name in Asana
+settings:
+  event_subscriptions:
+    bot_events:
+      - message.channels
+  socket_mode_enabled: true
+  org_deploy_enabled: false
+  token_rotation_enabled: false
