@@ -9,7 +9,8 @@
     "try:triage": "tsx scripts/try-triage.ts",
     "poll": "tsx scripts/poll-github.ts",
     "serve": "tsx src/server.ts",
-    "webhook:register": "tsx scripts/register-webhook.ts"
+    "webhook:register": "tsx scripts/register-webhook.ts",
+    "digest": "bash scripts/digest.sh"
   },
   "keywords": [],
   "author": "",
