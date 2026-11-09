@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 620" width="1200" height="620" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#57606a"/>
+    </marker>
+    <marker id="arrow-accent" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#d9534f"/>
+    </marker>
+    <style>
+      .box { fill: #ffffff; stroke: #d0d7de; stroke-width: 1.5; }
+      .title { font-size: 19px; font-weight: 600; fill: #1f2328; }
+      .sub { font-size: 14px; fill: #57606a; }
+      .label { font-size: 14px; fill: #57606a; }
+      .label-accent { font-size: 14px; fill: #b8403c; font-weight: 600; }
+      .line { stroke: #57606a; stroke-width: 2; fill: none; }
+      .line-accent { stroke: #d9534f; stroke-width: 2; fill: none; }
+      .badge { fill: #1f2328; }
+      .badge-text { font-size: 13px; font-weight: 700; fill: #ffffff; }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="1200" height="620" fill="#f6f8fa"/>
+
+  <!-- Weekly digest (top, above Asana) -->
+  <rect class="box" x="560" y="40" width="250" height="78" rx="12" stroke-dasharray="6 5"/>
+  <text class="title" x="685" y="74" text-anchor="middle">Weekly digest</text>
+  <text class="sub" x="685" y="98" text-anchor="middle">Claude Code, read-only</text>
+  <path class="line" d="M685 190 L685 124" marker-end="url(#arrow)"/>
+  <text class="label" x="697" y="162">Asana MCP server</text>
+
+  <!-- 1. Community group -->
+  <rect x="40" y="170" width="240" height="250" rx="14" fill="#eaeef2" stroke="#d0d7de" stroke-width="1.5"/>
+  <text class="sub" x="160" y="200" text-anchor="middle" font-weight="600">Where signals start</text>
+  <rect class="box" x="62" y="218" width="196" height="76" rx="10"/>
+  <text class="title" x="160" y="252" text-anchor="middle">GitHub issue</text>
+  <text class="sub" x="160" y="276" text-anchor="middle">polled every 30s</text>
+  <rect class="box" x="62" y="318" width="196" height="76" rx="10"/>
+  <text class="title" x="160" y="352" text-anchor="middle">Slack #questions</text>
+  <text class="sub" x="160" y="376" text-anchor="middle">Bolt, Socket Mode</text>
+  <circle class="badge" cx="48" cy="178" r="15"/>
+  <text class="badge-text" x="48" y="183" text-anchor="middle">1</text>
+
+  <!-- 2. Claude triage -->
+  <path class="line" d="M280 295 L340 295" marker-end="url(#arrow)"/>
+  <rect class="box" x="345" y="245" width="160" height="100" rx="12"/>
+  <text class="title" x="425" y="285" text-anchor="middle">Claude</text>
+  <text class="sub" x="425" y="309" text-anchor="middle">triage, one call</text>
+  <text class="sub" x="425" y="329" text-anchor="middle">zod-checked output</text>
+  <circle class="badge" cx="353" cy="253" r="15"/>
+  <text class="badge-text" x="353" y="258" text-anchor="middle">2</text>
+
+  <!-- 3. Asana -->
+  <path class="line" d="M505 295 L555 295" marker-end="url(#arrow)"/>
+  <rect x="560" y="195" width="250" height="200" rx="14" fill="#fff1f0" stroke="#d9534f" stroke-width="2"/>
+  <text class="title" x="685" y="236" text-anchor="middle">Asana</text>
+  <text class="sub" x="685" y="260" text-anchor="middle">Community Triage project</text>
+  <text class="sub" x="685" y="296" text-anchor="middle">section per signal type</text>
+  <text class="sub" x="685" y="318" text-anchor="middle">Source · Signal type · Priority</text>
+  <text class="sub" x="685" y="340" text-anchor="middle">Source URL</text>
+  <text class="sub" x="685" y="372" text-anchor="middle">REST API + Node SDK</text>
+  <circle class="badge" cx="568" cy="203" r="15"/>
+  <text class="badge-text" x="568" y="208" text-anchor="middle">3</text>
+
+  <!-- 4. Webhook server -->
+  <path class="line-accent" d="M810 295 L920 295" marker-end="url(#arrow-accent)"/>
+  <text class="label" x="865" y="280" text-anchor="middle">webhook</text>
+  <text class="label-accent" x="865" y="318" text-anchor="middle">task done</text>
+  <rect class="box" x="925" y="235" width="235" height="120" rx="12"/>
+  <text class="title" x="1042" y="273" text-anchor="middle">Webhook server</text>
+  <text class="sub" x="1042" y="297" text-anchor="middle">Hono, behind a tunnel</text>
+  <text class="sub" x="1042" y="317" text-anchor="middle">checks X-Hook-Signature</text>
+  <text class="sub" x="1042" y="337" text-anchor="middle">fetches the task</text>
+  <circle class="badge" cx="933" cy="243" r="15"/>
+  <text class="badge-text" x="933" y="248" text-anchor="middle">4</text>
+
+  <!-- 5. Reply lane -->
+  <path class="line-accent" d="M1042 355 L1042 520 L160 520 L160 426" marker-end="url(#arrow-accent)"/>
+  <circle class="badge" cx="600" cy="520" r="15"/>
+  <text class="badge-text" x="600" y="525" text-anchor="middle">5</text>
+  <text class="label-accent" x="600" y="556" text-anchor="middle">Reply on the GitHub issue or Slack thread</text>
+  <text class="label" x="600" y="578" text-anchor="middle">once per task, only to the configured repo and channel</text>
+</svg>

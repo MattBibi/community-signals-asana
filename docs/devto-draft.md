@@ -16,8 +16,6 @@ Then a product manager asks the question that matters: **"How many people have a
 
 And nobody knows. Not because nobody cared, but because the answer is spread across three tools, a dozen threads and a few people's memories. "A lot of people" isn't a number, and it doesn't win a spot on a roadmap.
 
-<!-- TODO(Bibi): if you have a real moment like this (anonymised, nothing employer-specific), it would make a stronger opening than the composite above. -->
-
 I love data, and I love working with product teams, and this is the gap between the two that I keep running into. Community signals are some of the most honest product feedback you'll ever get: unprompted, specific, and from people actively trying to build with your product. But they arrive as conversations, and conversations are hard to count.
 
 So I built a small open source app that turns them into something you can count. Every GitHub issue and Slack question becomes a triaged Asana task with a type, a source and a priority. And when the team finishes the work, the app goes back and tells the person who asked.
@@ -42,7 +40,7 @@ So the system has four jobs: **capture** signals where developers already are, *
 
 ## The loop at a glance
 
-<!-- TODO: export the Mermaid diagram from the README as an image; dev.to doesn't render Mermaid. -->
+![The loop: GitHub issues and Slack messages go to Claude for triage, then become Asana tasks. When a task is completed, an Asana webhook reaches a small server, which replies on the original issue or thread. A weekly digest reads the same project through Asana's MCP server.](https://raw.githubusercontent.com/MattBibi/community-signals-asana/main/docs/images/loop-diagram.png)
 
 1. **GitHub and Slack** are where signals start: one repo's issues and one Slack channel.
 2. **Claude** classifies each signal and writes a clear title and summary.
