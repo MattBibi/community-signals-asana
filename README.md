@@ -113,10 +113,11 @@ digest/               MCP digest prompt and generated examples
 
 ## Before using this for real
 
-This is a demo sized for one repo and one channel. For production I'd:
+This is a demo sized for one repo and one channel, and it isn't production-ready as is. For production I'd:
 
-- Use Asana OAuth and a GitHub App or bot account instead of personal tokens, so replies come from "Community Bot" rather than a person.
-- Receive GitHub issues by webhook instead of polling, and host the server behind a stable URL rather than a quick tunnel.
+- Move Slack from Socket Mode to the Events API over HTTP (signing secret, `url_verification` challenge). Slack doesn't allow Socket Mode for apps distributed through the Slack Marketplace.
+- Use a GitHub App instead of polling with a personal token: webhooks the moment an issue opens, and replies from a bot identity rather than a person. Use Asana OAuth instead of a personal access token too.
+- Host the server behind a stable URL rather than a quick tunnel.
 - Keep state (skipped signals, retry counts) in a small database so it survives restarts.
 - Add tests around the signature check and the idempotency markers, and an eval set for triage quality.
 
