@@ -8,9 +8,7 @@ Every developer community has the same leak. Someone opens a GitHub issue or ask
 
 I built a small open source app that fixes both halves: it turns those signals into triaged Asana tasks, and when a task is done, it replies to the person who raised it. This post walks through how it works, with the pieces of the Asana developer platform it uses: the REST API, the Node SDK, webhooks and the MCP server.
 
-<!-- GIF: docs/demo.gif -->
-
-Code: [github.com/MattBibi/asana-sandbox.github.io](https://github.com/MattBibi/asana-sandbox.github.io)
+Code: [github.com/MattBibi/community-signals-asana](https://github.com/MattBibi/community-signals-asana)
 
 ## The loop
 
@@ -116,7 +114,7 @@ One thing to know: the V2 server doesn't support dynamic client registration, so
 
 ## What I'd change for production
 
-Asana OAuth and a GitHub App instead of personal tokens, GitHub webhooks instead of polling, a stable URL instead of a quick tunnel, and a small database for state. The [README](https://github.com/MattBibi/asana-sandbox.github.io#before-using-this-for-real) has the full list.
+Asana OAuth and a GitHub App instead of personal tokens, GitHub webhooks instead of polling, a stable URL instead of a quick tunnel, and a small database for state. The [README](https://github.com/MattBibi/community-signals-asana#before-using-this-for-real) has the full list.
 
 ## Try it
 

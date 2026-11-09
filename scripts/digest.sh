@@ -9,9 +9,10 @@ OUT="digest/examples/$(date +%F).md"
 
 result="$(claude -p "$(cat digest/PROMPT.md)" --allowedTools "$TOOLS" < /dev/null)"
 
-# Only save something that looks like the digest (it starts with a heading).
-# Anything else is usually Claude explaining it couldn't reach Asana.
-if [[ "$result" != "#"* ]]; then
+# Keep everything from the first "# " heading on, in case Claude added a
+# sentence before it. No heading at all usually means it couldn't reach Asana.
+result="$(printf '%s\n' "$result" | awk 'found || /^# /{found=1; print}')"
+if [[ -z "$result" ]]; then
   echo "No digest written. Claude said:" >&2
   echo "$result" >&2
   echo "If it mentions authentication: run \`claude\`, type /mcp and sign in to Asana." >&2

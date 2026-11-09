@@ -4,8 +4,6 @@ Turn developer community signals into triaged Asana tasks, and tell people when 
 
 A GitHub issue or a Slack question comes in. An AI agent classifies it, writes a clear title and summary, and creates an Asana task in the right section with Source, Signal type and Priority filled in. When someone completes the task in Asana, the app replies on the original issue or thread. Once a week, Claude reads the same project through Asana's MCP server and drafts a community update.
 
-<!-- Demo GIF: docs/demo.gif -->
-
 ## How it works
 
 ```mermaid
@@ -38,7 +36,7 @@ flowchart LR
 You need Node 20.12+, a free Asana account, a GitHub repo to watch, an [Anthropic API key](https://platform.claude.com/settings/keys) and [cloudflared](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/downloads/) (or ngrok).
 
 ```bash
-git clone https://github.com/MattBibi/asana-sandbox.github.io community-signals-asana
+git clone https://github.com/MattBibi/community-signals-asana
 cd community-signals-asana
 npm install
 cp .env.example .env
@@ -121,3 +119,7 @@ This is a demo sized for one repo and one channel. For production I'd:
 - Receive GitHub issues by webhook instead of polling, and host the server behind a stable URL rather than a quick tunnel.
 - Keep state (skipped signals, retry counts) in a small database so it survives restarts.
 - Add tests around the signature check and the idempotency markers, and an eval set for triage quality.
+
+## License
+
+[MIT](LICENSE)
